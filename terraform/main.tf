@@ -126,7 +126,7 @@ resource "google_cloud_run_v2_service" "checkout" {
 
       env {
         name  = "PRODUCT_CATALOG_SERVICE_ADDR"
-        value = "${substr(google_cloud_run_v2_service.product.uri, 8, -1)}:443"
+        value = "grpcs://${substr(google_cloud_run_v2_service.product.uri, 8, -1)}:443"
       }
 
       env {
@@ -136,7 +136,7 @@ resource "google_cloud_run_v2_service" "checkout" {
 
       env {
         name  = "CURRENCY_SERVICE_ADDR"
-        value = "${substr(google_cloud_run_v2_service.currency.uri, 8, -1)}:443"
+        value = "grpcs://${substr(google_cloud_run_v2_service.currency.uri, 8, -1)}:443"
       }
 
       env {
@@ -146,7 +146,7 @@ resource "google_cloud_run_v2_service" "checkout" {
 
       env {
         name  = "CART_SERVICE_ADDR"
-        value = "${substr(google_cloud_run_v2_service.cart.uri, 8, -1)}:443"
+        value = "grpcs://${substr(google_cloud_run_v2_service.cart.uri, 8, -1)}:443"
       }
 
       env {
@@ -156,7 +156,7 @@ resource "google_cloud_run_v2_service" "checkout" {
 
       env {
         name  = "SHIPPING_SERVICE_ADDR"
-        value = "${substr(google_cloud_run_v2_service.shipping.uri, 8, -1)}:443"
+        value = "grpcs://${substr(google_cloud_run_v2_service.shipping.uri, 8, -1)}:443"
       }
 
       env {
@@ -166,7 +166,7 @@ resource "google_cloud_run_v2_service" "checkout" {
 
       env {
         name  = "EMAIL_SERVICE_ADDR"
-        value = "${substr(google_cloud_run_v2_service.email.uri, 8, -1)}:443"
+        value = "grpcs://${substr(google_cloud_run_v2_service.email.uri, 8, -1)}:443"
       }
 
       env {
@@ -176,7 +176,7 @@ resource "google_cloud_run_v2_service" "checkout" {
 
       env {
         name  = "PAYMENT_SERVICE_ADDR"
-        value = "${substr(google_cloud_run_v2_service.payment.uri, 8, -1)}:443"
+        value = "grpcs://${substr(google_cloud_run_v2_service.payment.uri, 8, -1)}:443"
       }
 
       env {
@@ -456,7 +456,7 @@ resource "google_cloud_run_v2_service" "frontend" {
 
       env {
         name  = "PRODUCT_CATALOG_SERVICE_ADDR"
-        value = "${substr(google_cloud_run_v2_service.product.uri, 8, -1)}:443"
+        value = "grpcs://${substr(google_cloud_run_v2_service.product.uri, 8, -1)}:443"
       }
 
       env {
@@ -466,7 +466,7 @@ resource "google_cloud_run_v2_service" "frontend" {
 
       env {
         name  = "CURRENCY_SERVICE_ADDR"
-        value = "${substr(google_cloud_run_v2_service.currency.uri, 8, -1)}:443"
+        value = "grpcs://${substr(google_cloud_run_v2_service.currency.uri, 8, -1)}:443"
       }
 
       env {
@@ -476,7 +476,7 @@ resource "google_cloud_run_v2_service" "frontend" {
 
       env {
         name  = "CART_SERVICE_ADDR"
-        value = "${substr(google_cloud_run_v2_service.cart.uri, 8, -1)}:443"
+        value = "grpcs://${substr(google_cloud_run_v2_service.cart.uri, 8, -1)}:443"
       }
 
       env {
@@ -486,7 +486,7 @@ resource "google_cloud_run_v2_service" "frontend" {
 
       env {
         name  = "RECOMMENDATION_SERVICE_ADDR"
-        value = "${substr(google_cloud_run_v2_service.recommendation.uri, 8, -1)}:443"
+        value = "grpcs://${substr(google_cloud_run_v2_service.recommendation.uri, 8, -1)}:443"
       }
 
       env {
@@ -496,7 +496,7 @@ resource "google_cloud_run_v2_service" "frontend" {
 
       env {
         name  = "SHIPPING_SERVICE_ADDR"
-        value = "${substr(google_cloud_run_v2_service.shipping.uri, 8, -1)}:443"
+        value = "grpcs://${substr(google_cloud_run_v2_service.shipping.uri, 8, -1)}:443"
       }
 
       env {
@@ -506,7 +506,7 @@ resource "google_cloud_run_v2_service" "frontend" {
 
       env {
         name  = "CHECKOUT_SERVICE_ADDR"
-        value = "${substr(google_cloud_run_v2_service.checkout.uri, 8, -1)}:443"
+        value = "grpcs://${substr(google_cloud_run_v2_service.checkout.uri, 8, -1)}:443"
       }
 
       env {
@@ -516,7 +516,7 @@ resource "google_cloud_run_v2_service" "frontend" {
 
       env {
         name  = "AD_SERVICE_ADDR"
-        value = "${substr(google_cloud_run_v2_service.advertisement.uri, 8, -1)}:443"
+        value = "grpcs://${substr(google_cloud_run_v2_service.advertisement.uri, 8, -1)}:443"
       }
 
       env {
@@ -580,7 +580,7 @@ resource "google_cloud_run_v2_service" "recommendation" {
 
       env {
         name  = "PRODUCT_CATALOG_SERVICE_ADDR"
-        value = "${substr(google_cloud_run_v2_service.product.uri, 8, -1)}:443"
+        value = "grpcs://${substr(google_cloud_run_v2_service.product.uri, 8, -1)}:443"
       }
 
       env {
@@ -668,7 +668,7 @@ resource "google_cloud_run_v2_service" "analytics" {
 
       env {
         name  = "CHECKOUT_SERVICE_ADDR"
-        value = "${substr(google_cloud_run_v2_service.checkout.uri, 8, -1)}:443"
+        value = "grpcs://${substr(google_cloud_run_v2_service.checkout.uri, 8, -1)}:443"
       }
 
       env {
@@ -678,7 +678,7 @@ resource "google_cloud_run_v2_service" "analytics" {
 
       env {
         name  = "RECOMMENDATION_SERVICE_ADDR"
-        value = "${substr(google_cloud_run_v2_service.recommendation.uri, 8, -1)}:443"
+        value = "grpcs://${substr(google_cloud_run_v2_service.recommendation.uri, 8, -1)}:443"
       }
 
       env {
