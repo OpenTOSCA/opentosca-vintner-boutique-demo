@@ -45,7 +45,7 @@ type platformDetails struct {
 }
 
 var (
-	frontendMessage  = strings.TrimSpace(os.Getenv("FRONTEND_MESSAGE") + "(ENV_PLATFORM: " + os.Getenv("ENV_PLATFORM") + ", OPTIONAL_PAYMENT_FEATURE: " + os.Getenv("OPTIONAL_PAYMENT_FEATURE") + ", PREMIUM_PAYMENT_FEATURE: " + os.Getenv("PREMIUM_PAYMENT_FEATURE") + ")")
+	frontendMessage  = strings.TrimSpace(os.Getenv("FRONTEND_MESSAGE") + "(OPTIONAL_PAYMENT_FEATURE: " + os.Getenv("OPTIONAL_PAYMENT_FEATURE") + ", PREMIUM_PAYMENT_FEATURE: " + os.Getenv("PREMIUM_PAYMENT_FEATURE") + ")")
 	isCymbalBrand    = "true" == strings.ToLower(os.Getenv("CYMBAL_BRANDING"))
 	assistantEnabled = "true" == strings.ToLower(os.Getenv("ENABLE_ASSISTANT"))
 	templates        = template.Must(template.New("").

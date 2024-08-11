@@ -28,8 +28,8 @@ RUN pip install -r requirements.txt
 FROM base
 # Enable unbuffered logging
 ENV PYTHONUNBUFFERED=1
-# Enable Profiler
-ENV ENABLE_PROFILER=1
+# Disable Profiler
+ENV DISABLE_PROFILER=1
 
 WORKDIR /email_server
 

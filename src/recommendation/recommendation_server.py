@@ -21,6 +21,7 @@ import random
 import time
 import traceback
 from concurrent import futures
+from urllib.parse import urlparse
 
 import googlecloudprofiler
 from google.auth.exceptions import DefaultCredentialsError
@@ -92,10 +93,23 @@ class RecommendationService(demo_pb2_grpc.RecommendationServiceServicer):
         return health_pb2.HealthCheckResponse(
             status=health_pb2.HealthCheckResponse.UNIMPLEMENTED)
 
-
-
 def str2bool(v):
   return v.lower() in ("yes", "true", "t", "1")
+
+
+def createGRPCChannel(key):
+    catalog_addr = os.environ.get(key, '')
+    if catalog_addr == "":
+        raise Exception(key + 'environment variable not set')
+    logger.info(key + " address: " + catalog_addr)
+
+    parsed = urlparse(catalog_addr)
+
+    channel = grpc.insecure_channel(catalog_addr)
+    if parsed.scheme == "grpcs":
+      channel = grpc.secure_channel(parsed.netloc, grpc.ssl_channel_credentials()) 
+
+    return channel
 
 if __name__ == "__main__":
     logger.info("initializing recommendationservice")
@@ -131,17 +145,8 @@ if __name__ == "__main__":
         logger.warn(f"Exception on Cloud Trace setup: {traceback.format_exc()}, tracing disabled.") 
 
     port = os.environ.get('PORT', "8080")
-    catalog_addr = os.environ.get('PRODUCT_CATALOG_SERVICE_ADDR', '')
-    catalog_secure = str2bool(os.environ.get('PRODUCT_CATALOG_SERVICE_SECURE', ''))
-    if catalog_addr == "":
-        raise Exception('PRODUCT_CATALOG_SERVICE_ADDR environment variable not set')
-    logger.info("product catalog address: " + catalog_addr + " (" + str(catalog_secure) + ")")
 
-    channel = grpc.insecure_channel(catalog_addr)
-    if catalog_secure:
-      channel = grpc.secure_channel(catalog_addr, grpc.ssl_channel_credentials())       
-    
-    product_catalog_stub = demo_pb2_grpc.ProductCatalogServiceStub(channel)
+    product_catalog_stub = demo_pb2_grpc.ProductCatalogServiceStub(createGRPCChannel('PRODUCT_CATALOG_SERVICE_ADDR'))
 
     # create gRPC server
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))

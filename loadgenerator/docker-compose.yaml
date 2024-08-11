@@ -3,8 +3,8 @@ version: '3.8'
 services:
     loadgenerator:
         #image: gcr.io/google-samples/microservices-demo/loadgenerator:v0.10.1
-        build: ../components/src/loadgenerator
+        build: ../src/loadgenerator
         network_mode: host
         environment:
-            - FRONTEND_ADDR=https://frontend-fgx2efhqra-ey.a.run.app/
+            - FRONTEND_ADDR=http://127.0.0.1:80
             - USERS=10

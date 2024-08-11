@@ -21,6 +21,7 @@ import random
 import time
 import traceback
 from concurrent import futures
+from urllib.parse import urlparse
 
 import googlecloudprofiler
 from google.auth.exceptions import DefaultCredentialsError
@@ -74,10 +75,22 @@ class AnalyticalService(demo_pb2_grpc.RecommendationServiceServicer):
         return health_pb2.HealthCheckResponse(
             status=health_pb2.HealthCheckResponse.UNIMPLEMENTED)
 
-
-
 def str2bool(v):
   return v.lower() in ("yes", "true", "t", "1")
+
+def createGRPCChannel(key):
+    catalog_addr = os.environ.get(key, '')
+    if catalog_addr == "":
+        raise Exception(key + 'environment variable not set')
+    logger.info(key + " address: " + catalog_addr)
+
+    parsed = urlparse(catalog_addr)
+
+    channel = grpc.insecure_channel(catalog_addr)
+    if parsed.scheme == "grpcs":
+      channel = grpc.secure_channel(parsed.netloc, grpc.ssl_channel_credentials()) 
+
+    return channel
 
 if __name__ == "__main__":
     logger.info("initializing analyticalservice")
@@ -113,26 +126,10 @@ if __name__ == "__main__":
         logger.warn(f"Exception on Cloud Trace setup: {traceback.format_exc()}, tracing disabled.") 
 
     # connect to checkout service
-    checkout_addr = os.environ.get('CHECKOUT_SERVICE_ADDR', '')
-    checkout_secure = str2bool(os.environ.get('CHECKOUT_SERVICE_SECURE', ''))
-    if checkout_addr == "":
-        raise Exception('CHECKOUT_SERVICE_ADDR environment variable not set')
-    logger.info("checkout address: " + checkout_addr + " (" + str(checkout_secure) + ")")
-    checkout_channel = grpc.insecure_channel(checkout_addr)
-    if checkout_secure:
-      checkout_channel = grpc.secure_channel(checkout_addr, grpc.ssl_channel_credentials())       
-    checkout_stub = demo_pb2_grpc.CheckoutServiceStub(checkout_channel)
+    checkout_stub = demo_pb2_grpc.CheckoutServiceStub(createGRPCChannel('CHECKOUT_SERVICE_ADDR'))
 
     # connect to recommendation service
-    recommendation_addr = os.environ.get('RECOMMENDATION_SERVICE_ADDR', '')
-    recommendation_secure = str2bool(os.environ.get('RECOMMENDATION_SERVICE_SECURE', ''))
-    if recommendation_addr == "":
-        raise Exception('RECOMMENDATION_SERVICE_ADDR environment variable not set')
-    logger.info("recommendation address: " + recommendation_addr + " (" + str(recommendation_secure) + ")")
-    recommendation_channel = grpc.insecure_channel(recommendation_addr)
-    if recommendation_secure:
-      recommendation_channel = grpc.secure_channel(recommendation_addr, grpc.ssl_channel_credentials())       
-    recommendation_stub = demo_pb2_grpc.CheckoutServiceStub(recommendation_channel)
+    recommendation_stub = demo_pb2_grpc.RecommendationServiceStub(createGRPCChannel('RECOMMENDATION_SERVICE_ADDR'))
 
     # create gRPC server
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))

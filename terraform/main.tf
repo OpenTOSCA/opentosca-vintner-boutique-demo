@@ -530,13 +530,8 @@ resource "google_cloud_run_v2_service" "frontend" {
       }
 
       env {
-        name  = "ENABLE_PROFILER"
-        value = "0"
-      }
-
-      env {
-        name  = "ENV_PLATFORM"
-        value = "gcp"
+        name  = "DISABLE_PROFILER"
+        value = "1"
       }
 
       env {

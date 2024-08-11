@@ -19,22 +19,16 @@ services:
 
     checkoutservice:
         #image: gcr.io/google-samples/microservices-demo/checkoutservice:v0.10.1
-        build: ../components/src/checkout
+        build: ../src/checkout
         container_name: boutique-checkout
         environment:
             PORT: 5050
-            PRODUCT_CATALOG_SERVICE_ADDR: productcatalogservice:3550
-            PRODUCT_CATALOG_SERVICE_SECURE: 0
-            SHIPPING_SERVICE_ADDR: shippingservice:50051
-            SHIPPING_SERVICE_SECURE: 0
-            PAYMENT_SERVICE_ADDR: paymentservice:50051
-            PAYMENT_SERVICE_SECURE: 0
-            EMAIL_SERVICE_ADDR: emailservice:8080
-            EMAIL_SERVICE_SECURE: 0
-            CURRENCY_SERVICE_ADDR: currencyservice:7000
-            CURRENCY_SERVICE_SECURE: 0
-            CART_SERVICE_ADDR: cartservice:7070
-            CART_SERVICE_SECURE: 0
+            PRODUCT_CATALOG_SERVICE_ADDR: grpc://productcatalogservice:3550
+            SHIPPING_SERVICE_ADDR: grpc://shippingservice:50051
+            PAYMENT_SERVICE_ADDR: grpc://paymentservice:50051
+            EMAIL_SERVICE_ADDR: grpc://emailservice:8080
+            CURRENCY_SERVICE_ADDR: grpc://currencyservice:7000
+            CART_SERVICE_ADDR: grpc://cartservice:7070
             OPTIONAL_PAYMENT_FEATURE: 1
             PREMIUM_PAYMENT_FEATURE: 0
 
@@ -47,7 +41,7 @@ services:
 
     cartservice:
         #image: gcr.io/google-samples/microservices-demo/cartservice:v0.10.1
-        build: ../components/src/cart/src
+        build: ../src/cart/src
         container_name: boutique-cart
         environment:
             #REDIS_ADDR: redis-cart:6379
@@ -84,7 +78,7 @@ services:
 
     paymentservice:
         #image: gcr.io/google-samples/microservices-demo/paymentservice:v0.10.1
-        build: ../components/src/payment
+        build: ../src/payment
         container_name: boutique-payment
         environment:
             PORT: 50051
@@ -94,40 +88,31 @@ services:
 
     frontend:
         #image: gcr.io/google-samples/microservices-demo/frontend:v0.10.1
-        build: ../components/src/frontend
+        build: ../src/frontend
         container_name: boutique-frontend
         ports:
             - '80:8080'
         environment:
             PORT: 8080
-            PRODUCT_CATALOG_SERVICE_ADDR: productcatalogservice:3550
-            PRODUCT_CATALOG_SERVICE_SECURE: 0
-            CURRENCY_SERVICE_ADDR: currencyservice:7000
-            CURRENCY_SERVICE_SECURE: 0
-            CART_SERVICE_ADDR: cartservice:7070
-            CART_SERVICE_SECURE: 0
-            RECOMMENDATION_SERVICE_ADDR: recommendationservice:8080
-            RECOMMENDATION_SERVICE_SECURE: 0
-            SHIPPING_SERVICE_ADDR: shippingservice:50051
-            SHIPPING_SERVICE_SECURE: 0
-            CHECKOUT_SERVICE_ADDR: checkoutservice:5050
-            CHECKOUT_SERVICE_SECURE: 0
-            AD_SERVICE_ADDR: adservice:9555
-            AD_SERVICE_SECURE: 0
-            SHOPPING_ASSISTANT_SERVICE_ADDR: shoppingassistantservice
-            ENABLE_PROFILER: 0
-            ENV_PLATFORM: local
+            PRODUCT_CATALOG_SERVICE_ADDR: grpc://productcatalogservice:3550
+            CURRENCY_SERVICE_ADDR: grpc://currencyservice:7000
+            CART_SERVICE_ADDR: grpc://cartservice:7070
+            RECOMMENDATION_SERVICE_ADDR: grpc://recommendationservice:8080
+            SHIPPING_SERVICE_ADDR: grpc://shippingservice:50051
+            CHECKOUT_SERVICE_ADDR: grpc://checkoutservice:5050
+            AD_SERVICE_ADDR: grpc://adservice:9555
+            SHOPPING_ASSISTANT_SERVICE_ADDR: 'required-some-dummy'
+            DISABLE_PROFILER: 1
             OPTIONAL_PAYMENT_FEATURE: 1
             PREMIUM_PAYMENT_FEATURE: 0
 
     recommendationservice:
         #image: gcr.io/google-samples/microservices-demo/recommendationservice:v0.10.1
-        build: ../components/src/recommendation
+        build: ../src/recommendation
         container_name: boutique-recommendation
         environment:
             PORT: 8080
-            PRODUCT_CATALOG_SERVICE_ADDR: productcatalogservice:3550
-            PRODUCT_CATALOG_SERVICE_SECURE: 0
+            PRODUCT_CATALOG_SERVICE_ADDR: grpc://productcatalogservice:3550
             DISABLE_PROFILER: 1
 
     adservice:
@@ -137,14 +122,12 @@ services:
             PORT: 9555
 
     analyticalservice:
-        build: ../components/src/analytical
+        build: ../src/analytical
         container_name: boutique-analytics
         environment:
             PORT: 9555
-            CHECKOUT_SERVICE_ADDR: checkoutservice:5050
-            CHECKOUT_SERVICE_SECURE: 0
-            RECOMMENDATION_SERVICE_ADDR: recommendationservice:8080
-            RECOMMENDATION_SERVICE_SECURE: 0
+            CHECKOUT_SERVICE_ADDR: grpc://checkoutservice:5050
+            RECOMMENDATION_SERVICE_ADDR: grpc://recommendationservice:8080
             DISABLE_PROFILER: 1
 
 volumes:

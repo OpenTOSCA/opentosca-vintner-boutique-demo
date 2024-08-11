@@ -20,6 +20,7 @@ import (
 	"context"
 	"fmt"
 	"net"
+	"net/url"
 	"os"
 	"time"
 
@@ -43,7 +44,6 @@ import (
 
 	"crypto/tls"
 	"crypto/x509"
-	"strconv"
 
 	"google.golang.org/grpc/credentials"
 )
@@ -70,29 +70,23 @@ func init() {
 }
 
 type checkoutService struct {
-	productCatalogSvcAddr   string
-	productCatalogSvcConn   *grpc.ClientConn
-	productCatalogSvcSecure bool
+	productCatalogSvcAddr string
+	productCatalogSvcConn *grpc.ClientConn
 
-	cartSvcAddr   string
-	cartSvcConn   *grpc.ClientConn
-	cartSvcSecure bool
+	cartSvcAddr string
+	cartSvcConn *grpc.ClientConn
 
-	currencySvcAddr   string
-	currencySvcConn   *grpc.ClientConn
-	currencySvcSecure bool
+	currencySvcAddr string
+	currencySvcConn *grpc.ClientConn
 
-	shippingSvcAddr   string
-	shippingSvcConn   *grpc.ClientConn
-	shippingSvcSecure bool
+	shippingSvcAddr string
+	shippingSvcConn *grpc.ClientConn
 
-	emailSvcAddr   string
-	emailSvcConn   *grpc.ClientConn
-	emailSvcSecure bool
+	emailSvcAddr string
+	emailSvcConn *grpc.ClientConn
 
-	paymentSvcAddr   string
-	paymentSvcConn   *grpc.ClientConn
-	paymentSvcSecure bool
+	paymentSvcAddr string
+	paymentSvcConn *grpc.ClientConn
 }
 
 func main() {
@@ -105,11 +99,11 @@ func main() {
 		log.Info("Tracing disabled.")
 	}
 
-	if os.Getenv("ENABLE_PROFILER") == "1" {
+	if os.Getenv("DISABLE_PROFILER") == "1" {
+		log.Info("Profiling disabled.")
+	} else {
 		log.Info("Profiling enabled.")
 		go initProfiling("checkoutservice", "1.0.0")
-	} else {
-		log.Info("Profiling disabled.")
 	}
 
 	if os.Getenv("OPTIONAL_PAYMENT_FEATURE") == "1" {
@@ -130,30 +124,24 @@ func main() {
 	}
 
 	svc := new(checkoutService)
-	mustMapEnvString(&svc.shippingSvcAddr, "SHIPPING_SERVICE_ADDR")
-	mustMapEnvBool(&svc.shippingSvcSecure, "SHIPPING_SERVICE_SECURE")
+	mustMapEnv(&svc.shippingSvcAddr, "SHIPPING_SERVICE_ADDR")
 
-	mustMapEnvString(&svc.productCatalogSvcAddr, "PRODUCT_CATALOG_SERVICE_ADDR")
-	mustMapEnvBool(&svc.productCatalogSvcSecure, "PRODUCT_CATALOG_SERVICE_SECURE")
+	mustMapEnv(&svc.productCatalogSvcAddr, "PRODUCT_CATALOG_SERVICE_ADDR")
 
-	mustMapEnvString(&svc.cartSvcAddr, "CART_SERVICE_ADDR")
-	mustMapEnvBool(&svc.cartSvcSecure, "CART_SERVICE_SECURE")
+	mustMapEnv(&svc.cartSvcAddr, "CART_SERVICE_ADDR")
 
-	mustMapEnvString(&svc.currencySvcAddr, "CURRENCY_SERVICE_ADDR")
-	mustMapEnvBool(&svc.currencySvcSecure, "CURRENCY_SERVICE_SECURE")
+	mustMapEnv(&svc.currencySvcAddr, "CURRENCY_SERVICE_ADDR")
 
-	mustMapEnvString(&svc.emailSvcAddr, "EMAIL_SERVICE_ADDR")
-	mustMapEnvBool(&svc.emailSvcSecure, "EMAIL_SERVICE_SECURE")
+	mustMapEnv(&svc.emailSvcAddr, "EMAIL_SERVICE_ADDR")
 
-	mustMapEnvString(&svc.paymentSvcAddr, "PAYMENT_SERVICE_ADDR")
-	mustMapEnvBool(&svc.paymentSvcSecure, "PAYMENT_SERVICE_SECURE")
+	mustMapEnv(&svc.paymentSvcAddr, "PAYMENT_SERVICE_ADDR")
 
-	mustConnGRPC(ctx, &svc.shippingSvcConn, svc.shippingSvcAddr, svc.shippingSvcSecure)
-	mustConnGRPC(ctx, &svc.productCatalogSvcConn, svc.productCatalogSvcAddr, svc.productCatalogSvcSecure)
-	mustConnGRPC(ctx, &svc.cartSvcConn, svc.cartSvcAddr, svc.cartSvcSecure)
-	mustConnGRPC(ctx, &svc.currencySvcConn, svc.currencySvcAddr, svc.currencySvcSecure)
-	mustConnGRPC(ctx, &svc.emailSvcConn, svc.emailSvcAddr, svc.emailSvcSecure)
-	mustConnGRPC(ctx, &svc.paymentSvcConn, svc.paymentSvcAddr, svc.paymentSvcSecure)
+	mustConnGRPC(ctx, &svc.shippingSvcConn, svc.shippingSvcAddr)
+	mustConnGRPC(ctx, &svc.productCatalogSvcConn, svc.productCatalogSvcAddr)
+	mustConnGRPC(ctx, &svc.cartSvcConn, svc.cartSvcAddr)
+	mustConnGRPC(ctx, &svc.currencySvcConn, svc.currencySvcAddr)
+	mustConnGRPC(ctx, &svc.emailSvcConn, svc.emailSvcAddr)
+	mustConnGRPC(ctx, &svc.paymentSvcConn, svc.paymentSvcAddr)
 
 	log.Infof("service config: %+v", svc)
 
@@ -194,8 +182,8 @@ func initTracing() {
 	ctx, cancel := context.WithTimeout(ctx, time.Second*3)
 	defer cancel()
 
-	mustMapEnvString(&collectorAddr, "COLLECTOR_SERVICE_ADDR")
-	mustConnGRPC(ctx, &collectorConn, collectorAddr, false)
+	mustMapEnv(&collectorAddr, "COLLECTOR_SERVICE_ADDR")
+	mustConnGRPC(ctx, &collectorConn, collectorAddr)
 
 	exporter, err := otlptracegrpc.New(
 		ctx,
@@ -232,7 +220,7 @@ func initProfiling(service, version string) {
 	log.Warn("could not initialize Stackdriver profiler after retrying, giving up")
 }
 
-func mustMapEnvString(target *string, envKey string) {
+func mustMapEnv(target *string, envKey string) {
 	v := os.Getenv(envKey)
 	if v == "" {
 		panic(fmt.Sprintf("environment variable %q not set", envKey))
@@ -241,21 +229,7 @@ func mustMapEnvString(target *string, envKey string) {
 	*target = v
 }
 
-func mustMapEnvBool(target *bool, envKey string) {
-	v := os.Getenv(envKey)
-	if v == "" {
-		panic(fmt.Sprintf("environment variable %q not set", envKey))
-	}
-
-	b, err := strconv.ParseBool(v)
-	if err != nil {
-		panic(errors.Wrapf(err, "environment variable %s holds non-boolean value %s", envKey, v))
-	}
-
-	*target = b
-}
-
-func mustConnGRPC(ctx context.Context, conn **grpc.ClientConn, addr string, secure bool) {
+func mustConnGRPC(ctx context.Context, conn **grpc.ClientConn, addr string) {
 	var err error
 	ctx, cancel := context.WithTimeout(ctx, time.Second*3)
 	defer cancel()
@@ -273,15 +247,27 @@ func mustConnGRPC(ctx context.Context, conn **grpc.ClientConn, addr string, secu
 		grpc.WithStreamInterceptor(otelgrpc.StreamClientInterceptor()),
 	}
 
-	if secure {
+	parsed, err := url.Parse(addr)
+	if err != nil {
+		fmt.Println("grpc: failed to parse addresse:", err)
+		return
+	}
+
+	if parsed.Host == "" {
+		log.Fatalf("grpc: empty host in address: %s", addr)
+	}
+
+	log.Infof("Connecting to gRPC server at %s", parsed.Host)
+
+	if parsed.Scheme == "grpcs" {
 		opts = append(opts, grpc.WithTransportCredentials(cred))
 	} else {
 		opts = append(opts, grpc.WithInsecure())
 	}
 
-	*conn, err = grpc.DialContext(ctx, addr, opts...)
+	*conn, err = grpc.DialContext(ctx, parsed.Host, opts...)
 	if err != nil {
-		panic(errors.Wrapf(err, "grpc: failed to connect %s", addr))
+		panic(errors.Wrapf(err, "grpc: failed to connect %s", parsed.Host))
 	}
 
 }
