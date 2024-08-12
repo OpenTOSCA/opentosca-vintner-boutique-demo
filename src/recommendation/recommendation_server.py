@@ -100,7 +100,7 @@ def str2bool(v):
 def createGRPCChannel(key):
     catalog_addr = os.environ.get(key, '')
     if catalog_addr == "":
-        raise Exception(key + 'environment variable not set')
+        raise Exception(key + ' environment variable not set')
     logger.info(key + " address: " + catalog_addr)
 
     parsed = urlparse(catalog_addr)
