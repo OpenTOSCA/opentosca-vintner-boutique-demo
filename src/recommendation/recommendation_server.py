@@ -96,7 +96,6 @@ class RecommendationService(demo_pb2_grpc.RecommendationServiceServicer):
 def str2bool(v):
   return v.lower() in ("yes", "true", "t", "1")
 
-
 def createGRPCChannel(key):
     catalog_addr = os.environ.get(key, '')
     if catalog_addr == "":
@@ -105,7 +104,7 @@ def createGRPCChannel(key):
 
     parsed = urlparse(catalog_addr)
 
-    channel = grpc.insecure_channel(catalog_addr)
+    channel = grpc.insecure_channel(parsed.netloc)
     if parsed.scheme == "grpcs":
       channel = grpc.secure_channel(parsed.netloc, grpc.ssl_channel_credentials()) 
 

@@ -6,7 +6,7 @@ cd "$(dirname "$0")"
 cd ../
 
 # Tag
-TAG=v7
+TAG=v8
 if [ -z "${TAG}" ]; then
   echo "TAG not defined"
   exit 1

@@ -6,5 +6,5 @@ services:
         build: ../src/loadgenerator
         network_mode: host
         environment:
-            - FRONTEND_ADDR=http://127.0.0.1:80
+            - FRONTEND_ADDR=${FRONTEND_ENDPOINT:-http://127.0.0.1:80}
             - USERS=10

@@ -81,12 +81,12 @@ def str2bool(v):
 def createGRPCChannel(key):
     catalog_addr = os.environ.get(key, '')
     if catalog_addr == "":
-        raise Exception(key + 'environment variable not set')
+        raise Exception(key + ' environment variable not set')
     logger.info(key + " address: " + catalog_addr)
 
     parsed = urlparse(catalog_addr)
 
-    channel = grpc.insecure_channel(catalog_addr)
+    channel = grpc.insecure_channel(parsed.netloc)
     if parsed.scheme == "grpcs":
       channel = grpc.secure_channel(parsed.netloc, grpc.ssl_channel_credentials()) 
 
