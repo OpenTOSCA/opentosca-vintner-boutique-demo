@@ -11,3 +11,5 @@ Modifications made by the University of Stuttgart:
 - Analytical: added "Analytical Service" by copying "Recommendation" and adpating it
 - Loadgenerator: added TLS support
 - removed the `service` suffix in `src` folders
+
+Remaining changes are documented in the git history at https://github.com/OpenTOSCA/opentosca-boutique-demo
