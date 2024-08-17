@@ -56,7 +56,7 @@ var (
 	plat platformDetails
 )
 
-var validEnvs = []string{"local", "openstack", "kubernetes", "gcp", "azure", "aws", "onprem", "alibaba"}
+var validEnvs = []string{"local", "openstack", "docker", "kubernetes", "gcp", "azure", "aws", "onprem", "alibaba"}
 
 func (fe *frontendServer) homeHandler(w http.ResponseWriter, r *http.Request) {
 	log := r.Context().Value(ctxKeyLog{}).(logrus.FieldLogger)
@@ -133,6 +133,9 @@ func (plat *platformDetails) setPlatformDetails(env string) {
 		plat.css = "onprem-platform"
 	} else if env == "openstack" {
 		plat.provider = "Openstack"
+		plat.css = "onprem-platform"
+	} else if env == "docker" {
+		plat.provider = "Docker"
 		plat.css = "onprem-platform"
 	} else if env == "kubernetes" {
 		plat.provider = "Kubernetes"
