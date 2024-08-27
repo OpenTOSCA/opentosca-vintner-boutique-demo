@@ -32,7 +32,7 @@ FROM base
 ENV PYTHONUNBUFFERED=1
 
 # get packages
-WORKDIR /analyticalservice
+WORKDIR /analyticsservice
 
 # Grab packages from builder
 COPY --from=builder /usr/local/lib/python3.12/ /usr/local/lib/python3.12/
@@ -44,4 +44,4 @@ COPY . .
 ENV PORT "8080"
 EXPOSE 8080
 
-ENTRYPOINT ["python", "analytical_server.py"]
+ENTRYPOINT ["python", "analytics_server.py"]

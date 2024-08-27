@@ -24,7 +24,7 @@ docker build -t ${REGISTRY}/boutique-advertisement:${TAG} src/advertisement
 docker push ${REGISTRY}/boutique-advertisement:${TAG}
 
 # Analytics
-docker build -t ${REGISTRY}/boutique-analytics:${TAG} src/analytical
+docker build -t ${REGISTRY}/boutique-analytics:${TAG} src/analytics
 docker push ${REGISTRY}/boutique-analytics:${TAG}
 
 # Cart

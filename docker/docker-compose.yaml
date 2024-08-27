@@ -121,8 +121,8 @@ services:
         environment:
             PORT: 9555
 
-    analyticalservice:
-        build: ../src/analytical
+    analyticsservice:
+        build: ../src/analytics
         container_name: boutique-analytics
         environment:
             PORT: 9555

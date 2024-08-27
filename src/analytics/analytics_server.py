@@ -39,7 +39,7 @@ from opentelemetry.sdk.trace.export import BatchSpanProcessor
 from opentelemetry.exporter.otlp.proto.grpc.trace_exporter import OTLPSpanExporter
 
 from logger import getJSONLogger
-logger = getJSONLogger('analyticalservice-server')
+logger = getJSONLogger('analyticsservice-server')
 
 def initStackdriverProfiling():
   project_id = None
@@ -52,9 +52,9 @@ def initStackdriverProfiling():
   for retry in range(1,4):
     try:
       if project_id:
-        googlecloudprofiler.start(service='analytical_server', service_version='1.0.0', verbose=0, project_id=project_id)
+        googlecloudprofiler.start(service='analytics_server', service_version='1.0.0', verbose=0, project_id=project_id)
       else:
-        googlecloudprofiler.start(service='analytical_server', service_version='1.0.0', verbose=0)
+        googlecloudprofiler.start(service='analytics_server', service_version='1.0.0', verbose=0)
       logger.info("Successfully started Stackdriver Profiler.")
       return
     except (BaseException) as exc:
@@ -66,7 +66,7 @@ def initStackdriverProfiling():
         logger.warning("Could not initialize Stackdriver Profiler after retrying, giving up")
   return
 
-class AnalyticalService(demo_pb2_grpc.RecommendationServiceServicer):
+class AnalyticsService(demo_pb2_grpc.RecommendationServiceServicer):
     def Check(self, request, context):
         return health_pb2.HealthCheckResponse(
             status=health_pb2.HealthCheckResponse.SERVING)
@@ -88,12 +88,12 @@ def createGRPCChannel(key):
 
     channel = grpc.insecure_channel(parsed.netloc)
     if parsed.scheme == "grpcs":
-      channel = grpc.secure_channel(parsed.netloc, grpc.ssl_channel_credentials()) 
+      channel = grpc.secure_channel(parsed.netloc, grpc.ssl_channel_credentials())
 
     return channel
 
 if __name__ == "__main__":
-    logger.info("initializing analyticalservice")
+    logger.info("initializing analyticsservice")
 
     try:
       if "DISABLE_PROFILER" in os.environ:
@@ -123,7 +123,7 @@ if __name__ == "__main__":
     except (KeyError, DefaultCredentialsError):
         logger.info("Tracing disabled.")
     except Exception as e:
-        logger.warn(f"Exception on Cloud Trace setup: {traceback.format_exc()}, tracing disabled.") 
+        logger.warn(f"Exception on Cloud Trace setup: {traceback.format_exc()}, tracing disabled.")
 
     # connect to checkout service
     checkout_stub = demo_pb2_grpc.CheckoutServiceStub(createGRPCChannel('CHECKOUT_SERVICE_ADDR'))
@@ -135,7 +135,7 @@ if __name__ == "__main__":
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
 
     # add class to gRPC server
-    service = AnalyticalService()
+    service = AnalyticsService()
     health_pb2_grpc.add_HealthServicer_to_server(service, server)
 
     # start server

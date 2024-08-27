@@ -8,7 +8,7 @@ Modifications made by the University of Stuttgart:
 - Frontend: add "Openstack" and "Kubernetes" as platforms
 - Frontend, Email: use "DISABLE_PROFILE" instead of "ENABLE_PROFILE"
 - Cart: added MySQL support following https://github.com/GoogleCloudPlatform/microservices-demo/pull/1836/files extended by the creation of the database table inside the code and the conditional use of TLS
-- Analytical: added "Analytical Service" by copying "Recommendation" and adpating it
+- Analytics: added "Analytical Service" by copying "Recommendation" and adpating it
 - Loadgenerator: added TLS support
 - removed the `service` suffix in `src` folders
 
