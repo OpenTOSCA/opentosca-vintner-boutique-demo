@@ -6,63 +6,63 @@ cd "$(dirname "$0")"
 cd ../
 
 # Tag
-TAG=v8
+TAG=v10
 if [ -z "${TAG}" ]; then
   echo "TAG not defined"
   exit 1
 fi
 
 # Registry
-REGISTRY=milesstoetzner
+REGISTRY=ghcr.io/opentosca/opentosca-vintner-boutique-demo
 if [ -z "${REGISTRY}" ]; then
   echo "REGISTRY not defined"
   exit 1
 fi
 
 # Advertisement
-docker build -t ${REGISTRY}/boutique-advertisement:${TAG} src/advertisement
-docker push ${REGISTRY}/boutique-advertisement:${TAG}
+docker build -t ${REGISTRY}:advertisement-${TAG} src/advertisement
+docker push ${REGISTRY}:advertisement-${TAG}
 
 # Analytics
-docker build -t ${REGISTRY}/boutique-analytics:${TAG} src/analytics
-docker push ${REGISTRY}/boutique-analytics:${TAG}
+docker build -t ${REGISTRY}:analytics-${TAG} src/analytics
+docker push ${REGISTRY}:analytics-${TAG}
 
 # Cart
-docker build -t ${REGISTRY}/boutique-cart:${TAG} src/cart/src
-docker push ${REGISTRY}/boutique-cart:${TAG}
+docker build -t ${REGISTRY}:cart-${TAG} src/cart/src
+docker push ${REGISTRY}:cart-${TAG}
 
 # Checkout
-docker build -t ${REGISTRY}/boutique-checkout:${TAG} src/checkout
-docker push ${REGISTRY}/boutique-checkout:${TAG}
+docker build -t ${REGISTRY}:checkout-${TAG} src/checkout
+docker push ${REGISTRY}:checkout-${TAG}
 
 # Currency
-docker build -t ${REGISTRY}/boutique-currency:${TAG} src/currency
-docker push ${REGISTRY}/boutique-currency:${TAG}
+docker build -t ${REGISTRY}:currency-${TAG} src/currency
+docker push ${REGISTRY}:currency-${TAG}
 
 # Email
-docker build -t ${REGISTRY}/boutique-email:${TAG} src/email
-docker push ${REGISTRY}/boutique-email:${TAG}
+docker build -t ${REGISTRY}:email-${TAG} src/email
+docker push ${REGISTRY}:email-${TAG}
 
 # Frontend
-docker build -t ${REGISTRY}/boutique-frontend:${TAG} src/frontend
-docker push ${REGISTRY}/boutique-frontend:${TAG}
+docker build -t ${REGISTRY}:frontend-${TAG} src/frontend
+docker push ${REGISTRY}:frontend-${TAG}
 
 # Load Generator
-docker build -t ${REGISTRY}/boutique-loadgenerator:${TAG} src/loadgenerator
-docker push ${REGISTRY}/boutique-loadgenerator:${TAG}
+docker build -t ${REGISTRY}:loadgenerator-${TAG} src/loadgenerator
+docker push ${REGISTRY}:loadgenerator-${TAG}
 
 # Payment
-docker build -t ${REGISTRY}/boutique-payment:${TAG} src/payment
-docker push ${REGISTRY}/boutique-payment:${TAG}
+docker build -t ${REGISTRY}:payment-${TAG} src/payment
+docker push ${REGISTRY}:payment-${TAG}
 
 # Product
-docker build -t ${REGISTRY}/boutique-product:${TAG} src/product
-docker push ${REGISTRY}/boutique-product:${TAG}
+docker build -t ${REGISTRY}:product-${TAG} src/product
+docker push ${REGISTRY}:product-${TAG}
 
 # Recommendation
-docker build -t ${REGISTRY}/boutique-recommendation:${TAG} src/recommendation
-docker push ${REGISTRY}/boutique-recommendation:${TAG}
+docker build -t ${REGISTRY}:recommendation-${TAG} src/recommendation
+docker push ${REGISTRY}:recommendation-${TAG}
 
 # Shipping
-docker build -t ${REGISTRY}/boutique-shipping:${TAG} src/shipping
-docker push ${REGISTRY}/boutique-shipping:${TAG}
+docker build -t ${REGISTRY}:shipping-${TAG} src/shipping
+docker push ${REGISTRY}:shipping-${TAG}

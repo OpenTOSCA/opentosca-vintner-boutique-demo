@@ -117,7 +117,7 @@ resource "google_cloud_run_v2_service" "checkout" {
 
   template {
     containers {
-      image = "milesstoetzner/boutique-checkout:latest"
+      image = "ghcr.io/opentosca/opentosca-vintner-boutique-demo:checkout-v10"
 
       ports {
         name           = "h2c"
@@ -253,7 +253,7 @@ resource "google_cloud_run_v2_service" "cart" {
 
   template {
     containers {
-      image = "milesstoetzner/boutique-cart:v3"
+      image = "ghcr.io/opentosca/opentosca-vintner-boutique-demo:cart-v10"
 
       ports {
         name           = "h2c"
@@ -404,7 +404,7 @@ resource "google_cloud_run_v2_service" "payment" {
 
   template {
     containers {
-      image = "milesstoetzner/boutique-payment:latest"
+      image = "ghcr.io/opentosca/opentosca-vintner-boutique-demo:payment-v10"
 
       ports {
         name           = "h2c"
@@ -452,7 +452,7 @@ resource "google_cloud_run_v2_service" "frontend" {
 
   template {
     containers {
-      image = "milesstoetzner/boutique-frontend:latest"
+      image = "ghcr.io/opentosca/opentosca-vintner-boutique-demo:frontend-v10"
 
       env {
         name  = "PRODUCT_CATALOG_SERVICE_ADDR"
@@ -571,7 +571,7 @@ resource "google_cloud_run_v2_service" "recommendation" {
 
   template {
     containers {
-      image = "milesstoetzner/boutique-recommendation:latest"
+      image = "ghcr.io/opentosca/opentosca-vintner-boutique-demo:recommendation-v10"
 
       ports {
         name           = "h2c"
@@ -658,7 +658,7 @@ resource "google_cloud_run_v2_service" "analytics" {
 
   template {
     containers {
-      image = "milesstoetzner/boutique-analytics:latest"
+      image = "ghcr.io/opentosca/opentosca-vintner-boutique-demo:analytics-v10"
 
 
       ports {

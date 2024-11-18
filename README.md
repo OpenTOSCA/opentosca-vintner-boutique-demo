@@ -1,6 +1,11 @@
-# OpenTOSCA Boutique Demo
+# OpenTOSCA Vintner Boutique Demo
 
-The OpenTOSCA Boutique Demo is based on the [GCP Online Boutique](https://github.com/GoogleCloudPlatform/microservices-demo).
+[![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+[![OpenTOSCA](https://img.shields.io/badge/OpenTOSCA-%E2%9D%A4%EF%B8%8F-blue)](https://opentosca.org)
+[![docker](https://img.shields.io/badge/docker-ghcr.io-blue)](https://github.com/OpenTOSCA/opentosca-vintner-boutique-demo/pkgs/container/opentosca-vintner-boutique-demo)
+[![BMWK](https://img.shields.io/badge/BMWK-SofDCar%20(19S21002)-blue.svg)](https://sofdcar.de)
+
+The OpenTOSCA Vintner Boutique Demo is based on the [GCP Online Boutique](https://github.com/GoogleCloudPlatform/microservices-demo).
 See [NOTICE](NOTICE) for more information.
 
 ## Haftungsausschluss
