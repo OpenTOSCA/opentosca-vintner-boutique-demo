@@ -22,6 +22,7 @@ import (
 	"net"
 	"net/url"
 	"os"
+	"strings"
 	"time"
 
 	"cloud.google.com/go/profiler"
@@ -91,7 +92,7 @@ type checkoutService struct {
 
 func main() {
 	ctx := context.Background()
-	if os.Getenv("ENABLE_TRACING") == "1" {
+	if env2bool("ENABLE_TRACING") {
 		log.Info("Tracing enabled.")
 		initTracing()
 
@@ -99,20 +100,20 @@ func main() {
 		log.Info("Tracing disabled.")
 	}
 
-	if os.Getenv("DISABLE_PROFILER") == "1" {
+	if env2bool("DISABLE_PROFILER") {
 		log.Info("Profiling disabled.")
 	} else {
 		log.Info("Profiling enabled.")
 		go initProfiling("checkoutservice", "1.0.0")
 	}
 
-	if os.Getenv("OPTIONAL_PAYMENT_FEATURE") == "1" {
+	if env2bool("OPTIONAL_PAYMENT_FEATURE") {
 		log.Info("optional payment feature enabled")
 	} else {
 		log.Info("optional payment feature disabled")
 	}
 
-	if os.Getenv("PREMIUM_PAYMENT_FEATURE") == "1" {
+	if env2bool("PREMIUM_PAYMENT_FEATURE") {
 		log.Info("premium payment feature enabled")
 	} else {
 		log.Info("premium payment feature disabled")
@@ -444,4 +445,16 @@ func (cs *checkoutService) shipOrder(ctx context.Context, address *pb.Address, i
 		return "", fmt.Errorf("shipment failed: %+v", err)
 	}
 	return resp.GetTrackingId(), nil
+}
+
+func env2bool(value string) bool {
+	if os.Getenv(value) != "" {
+		return false
+	}
+
+	s := strings.ToLower(strings.TrimSpace(os.Getenv(value)))
+	if (strings.HasPrefix(s, "\"") && strings.HasSuffix(s, "\"")) || (strings.HasPrefix(s, "'") && strings.HasSuffix(s, "'")) {
+		s = s[1 : len(s)-1]
+	}
+	return s == "yes" || s == "true" || s == "t" || s == "1"
 }

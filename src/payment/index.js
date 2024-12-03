@@ -64,8 +64,12 @@ else {
 }
 
 
-function str2bool(v) {
-  return ["yes", "true", "t", "1"].includes(v.toLowerCase()) 
+function str2bool(value) {
+  let s = String(value).toLowerCase()
+  if (s.startsWith('"') && s.endsWith('"') || s.startsWith("'") && s.endsWith("'")) {
+    s = s.slice(1, -1)
+  }
+  return ["yes", "true", "t", "1"].includes(s)
 }
 
 if (str2bool(process.env.OPTIONAL_PAYMENT_FEATURE)) {

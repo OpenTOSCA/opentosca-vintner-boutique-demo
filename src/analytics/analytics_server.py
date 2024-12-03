@@ -75,8 +75,11 @@ class AnalyticsService(demo_pb2_grpc.RecommendationServiceServicer):
         return health_pb2.HealthCheckResponse(
             status=health_pb2.HealthCheckResponse.UNIMPLEMENTED)
 
-def str2bool(v):
-  return v.lower() in ("yes", "true", "t", "1")
+def str2bool(value):
+    s = str(value).lower()
+    if (s.startswith('"') and s.endswith('"')) or (s.startswith("'") and s.endswith("'")):
+        s = s[1:-1]
+    return s in ["yes", "true", "t", "1"]
 
 def createGRPCChannel(key):
     catalog_addr = os.environ.get(key, '')

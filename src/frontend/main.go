@@ -22,6 +22,7 @@ import (
 	"net/http"
 	"os"
 	"time"
+	"strings"
 
 	"cloud.google.com/go/profiler"
 	"github.com/gorilla/mux"
@@ -117,27 +118,27 @@ func main() {
 
 	baseUrl = os.Getenv("BASE_URL")
 
-	if os.Getenv("ENABLE_TRACING") == "1" {
+	if env2bool("ENABLE_TRACING") {
 		log.Info("Tracing enabled.")
 		initTracing(log, ctx, svc)
 	} else {
 		log.Info("Tracing disabled.")
 	}
 
-	if os.Getenv("DISABLE_PROFILER") == "1" {
+	if env2bool("DISABLE_PROFILER") {
 		log.Info("Profiling disabled.")
 	} else {
 		log.Info("Profiling enabled.")
 		go initProfiling(log, "frontend", "1.0.0")
 	}
 
-	if os.Getenv("OPTIONAL_PAYMENT_FEATURE") == "1" {
+	if env2bool("OPTIONAL_PAYMENT_FEATURE") {
 		log.Info("optional payment feature enabled")
 	} else {
 		log.Info("optional payment feature disabled")
 	}
 
-	if os.Getenv("PREMIUM_PAYMENT_FEATURE") == "1" {
+	if env2bool("PREMIUM_PAYMENT_FEATURE") {
 		log.Info("premium payment feature enabled")
 	} else {
 		log.Info("premium payment feature disabled")
@@ -290,4 +291,16 @@ func mustConnGRPC(ctx context.Context, conn **grpc.ClientConn, addr string) {
 		panic(errors.Wrapf(err, "grpc: failed to connect %s", parsed.Host))
 	}
 
+}
+
+func env2bool(value string) bool {
+	if os.Getenv(value) != "" {
+		return false
+	}
+
+	s := strings.ToLower(strings.TrimSpace(os.Getenv(value)))
+	if (strings.HasPrefix(s, "\"") && strings.HasSuffix(s, "\"")) || (strings.HasPrefix(s, "'") && strings.HasSuffix(s, "'")) {
+		s = s[1 : len(s)-1]
+	}
+	return s == "yes" || s == "true" || s == "t" || s == "1"
 }
